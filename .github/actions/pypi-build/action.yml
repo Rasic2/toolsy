@@ -30,7 +30,7 @@ runs:
     - name: Build wheels
       env:
         CIBW_BUILD: ${{ inputs.CIBW_BUILD }}
-      run: cibuildwheel --output-dir dist
+      run: pip wheel .
       shell: bash
 
     - name: Publish package to PyPI
