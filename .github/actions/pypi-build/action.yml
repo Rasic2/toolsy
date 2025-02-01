@@ -30,7 +30,9 @@ runs:
     - name: Build wheels
       env:
         CIBW_BUILD: ${{ inputs.CIBW_BUILD }}
-      run: pip wheel .
+      run: |
+        python -m pip install build
+        python -m build
       shell: bash
 
     - name: Publish package to PyPI
