@@ -1,0 +1,45 @@
+name: RunTest
+on: push
+jobs:
+  GVaspTests:
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Generate lib files
+        run: |
+          python setup.py build
+          find ./build -iname '*.so' -exec cp {} ./gvasp/lib \;
+      - name: Modify config
+        run: |
+          python tests/modify_config.py
+      - name: Add font
+        run: |
+          python tests/add_font.py
+      - name: Copy files
+        run: |
+          cp tests/XDATCAR .
+          cp tests/OUTCAR .
+          cp tests/CONTCAR .
+          cp tests/EIGENVAL .
+          cp tests/AECCAR* .
+          cp tests/CHGCAR .
+          cp tests/CHGCAR_diff .
+          cp tests/LOCPOT .
+          cp tests/CONTCAR_dos tests/DOSCAR_dos .
+      - name: Run tests and collect coverage
+        run: |
+          pip install pytest
+          pip install pytest-cov
+          pytest --cov=./ --cov-report=xml --cov-config=./.coveragerc
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
