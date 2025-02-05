@@ -58,13 +58,14 @@ class ColoredLogger(logging.Logger):
         self.addHandler(ch)
 
 
-def init_root_logger(name=None, level=logging.INFO):
+def init_colored_logger(name=None, level=logging.INFO):
     logging.setLoggerClass(ColoredLogger)
-    root_logger = logging.getLogger(name)
-    root_logger.setLevel(level=level)
+    logger = logging.getLogger(name)
+    logger.setLevel(level=level)
+
+    return logger
 
 
 if __name__ == '__main__':
-    init_root_logger("toolsy")
-    logger = logging.getLogger("toolsy")
+    logger = init_colored_logger("toolsy")
     logger.info("First logger...")
