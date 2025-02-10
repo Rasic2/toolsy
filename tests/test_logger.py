@@ -1,14 +1,11 @@
-import logging
-
 import pytest
 
-from toolsy.logger import init_root_logger
+from toolsy.logger import init_colored_logger
 
 
 class TestLogger:
     def test_logger(self):
-        init_root_logger(__name__)
-        logger = logging.getLogger(__name__)
+        logger = init_colored_logger(__name__)
         logger.info("Logger Test...")
 
 
